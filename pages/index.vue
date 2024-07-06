@@ -1,11 +1,30 @@
 <script setup lang="ts">
 const bedrockResults = ref("");
 const loading = ref(false);
+/*
 async function submit(event: Event) {
-  /*
  Add submit code here. You'll need to use $fetch to the `/api/ask-bedrock` end point.
  with `{ingredients}
+}
  */
+
+async function submit(event: Event) {
+  loading.value = true;
+  bedrockResults.value = "";
+  try {
+    const formData = new FormData(event.target as HTMLFormElement);
+    const ingredients = formData.get("ingredients");
+    const results = await $fetch("/api/ask-bedrock", {
+      method: "post",
+      body: { ingredients },
+    });
+    bedrockResults.value = results;
+    results;
+  } catch (e) {
+    alert(`An error occurred: ${e}`);
+  } finally {
+    loading.value = false;
+  }
 }
 </script>
 <template>
